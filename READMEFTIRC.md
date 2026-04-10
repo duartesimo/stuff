@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by <login1>[, <login2>[, <login3>]].*
+*This project has been created as part of the 42 curriculum by nsimao-f, tialbert.*
 
 # ft_irc
 
@@ -138,25 +138,13 @@ Typical tests included:
 - IRC protocol overview
 - Irssi documentation
 - `poll(2)`, `socket(2)`, `accept(2)`, `recv(2)`, `send(2)`, `fcntl(2)` man pages
-- Beej's Guide to Network Programming
 
 ### AI usage
 
 AI was used as a support tool during the project for:
 - discussing architecture choices
 - reviewing code organization
-- checking edge cases in command handling
 - improving documentation
 - preparing testing checklists
-- reasoning about evaluation requirements
 
 AI was **not** used as a blind copy-paste source. All generated ideas and code suggestions were reviewed, adapted, tested, and manually understood before being kept in the project.
-
-## Notes
-
-This README is intended to help someone unfamiliar with the project quickly understand:
-- what the project is
-- how to compile and run it
-- which client was used for testing
-- where to look in the codebase
-- which external resources are relevant
