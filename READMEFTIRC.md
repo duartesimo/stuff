@@ -147,4 +147,4 @@ AI was used as a support tool during the project for:
 - improving documentation
 - preparing testing checklists
 
-AI was **not** used as a blind copy-paste source. All generated ideas and code suggestions were reviewed, adapted, tested, and manually understood before being kept in the project.
+AI was **not** used as a blind copy-paste source. All ideas and suggestions were reviewed, adapted, tested, and manually understood before being used in the project.
