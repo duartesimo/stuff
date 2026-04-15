@@ -1,0 +1,138 @@
+./ircserv 6667 mypass
+nc -C 127.0.0.1 6667
+PASS mypass
+NICK bob
+USER bob 0 * :Bobby Bob  (USER <username> <mode> <unused> :<realname>)
+PING hello
+WHATEVER
+
+(Alice in Irssi)
+JOIN #test
+PRIVMSG alice :hello alice
+PRIVMSG #test :hello channel
+
+(Erros)
+PRIVMSG
+PRIVMSG alice
+PRIVMSG #nope :hello
+
+TOPIC #test
+TOPIC #test :new topic
+
+KICK #test alice :bye
+
+--------------------
+
+./ircserv 6667 mypass
+/connect 127.0.0.1 6667 mypass bob
+/connect 127.0.0.1 6667 mypass alice
+/connect 127.0.0.1 6667 mypass john
+
+/join #test (all)
+/names #test
+/who #test
+/who john
+
+/msg #test hello everyone
+/msg alice hello alice
+
+/notice #test hello channel notice
+/notice alice hello private notice
+
+/topic #test
+/topic #test new topic
+
+/part #test (John)
+/join #test (John rejoins)
+
+/kick #test john bye (Bob)
+/names #test
+
+/join #new (Bob)
+/mode #new +i
+/join #new (John, should fail)
+/invite john #new (Bob)
+/join #new (John, should work)
+/mode #new -i
+
+/mode #new +t
+/topic #new john tries topic (should fail)
+/topic #new bob sets topic (should work)
+/mode #new -t
+
+/mode #new +k secretpw
+/join #new (Alice, should fail)
+/join #new secret (Alice, should work)
+/mode #new -k
+
+/mode #new +l 2
+/part #new (John)
+/join #new (John, should fail)
+/mode #new -l
+/join #new (John, should work)
+
+/mode #new +o alice
+/kick #new john bye (Alice, should now work)
+/mode #new -o alice
+
+/mode #new
+
+/mode #new +it
+/mode #new +lk 4 secret
+/mode #new +liko 4 secret alice
+/mode #new -likot alice
+/mode #test +likto secret 4 alice (should not set limit and pw is 4)
+
+-----------------------
+
+Partial command completed later
+• Keep one receiver connected (Alice)
+• Run the partial-send script and verify Alice receives only the final complete message
+./test_partial_target.sh 127.0.0.1 6667 mypass alice
+
+Keep Alice connected.
+• Run the half-disconnect script below, Alice must receive nothing; server must remain healthy.
+./test_half_disconnect.sh 127.0.0.1 6667 mypass alice
+
+Unexpected client death
+• Open two clients in the same channel.
+• Kill one abruptly or close the terminal.
+• The other client must continue working and new clients must still connect.
+
+Ctrl+Z, flood, and fg
+• Open Bob and Alice in the same channel.
+• On Alice: press Ctrl+Z.
+• On Bob: send multiple channel messages.
+• Return to Alice's shell and run fg.
+• Check that the server never hangs and the resumed client works normally.
+
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./ircserv 6667 mypass
+
+-----------------------
+
+/join #test (John)
+/msg #test !help
+/msg #test !hello
+/msg #test !users
+/msg #test !length hello world
+/msg #test !length
+/msg #test !time
+/msg #test !banana
+
+or in NC
+
+JOIN #test
+PRIVMSG #test :!help
+PRIVMSG #test :!hello
+PRIVMSG #test :!users
+PRIVMSG #test :!length hello world
+PRIVMSG #test :!time
+
+----------------------------
+
+In:
+PRIVMSG alice :hi there
+
+Out:
+[:prefix] COMMAND [params] [:trailing] \r\n
+:bob!user@localhost PRIVMSG alice :hi there
