@@ -1,0 +1,16 @@
+Docker → Empacota o código, bibliotecas e dependências de uma aplicação numa imagem. Ao executar essa imagem, cria-se um contentor.
+
+Container → Vive no seu próprio espaço, com o seu próprio processo, rede e sistema de ficheiros, mas partilha o kernel com o sistema anfitrião.
+
+Docker Compose → Lê o ficheiro docker-compose.yml e, com um único comando, faz build das imagens e cria redes e volumes. Fica tudo configurado.
+
+Sem ele, tens de escrever manualmente docker run sempre que quiseres arrancar cada contentor;
+Com Docker Compose, declaras e geres todos os teus contentores, redes, volumes e definições em conjunto, como se fosse um script.
+
+Docker vs VM → Como partilha o kernel, arranca mais depressa (não precisa de um sistema operativo por cada instância), usa menos recursos e é melhor em termos de portabilidade, porque corre da mesma forma em qualquer máquina onde o Docker esteja instalado.
+
+Docker Network → É uma LAN virtual para os contentores comunicarem entre si, isolados de outras redes ou do anfitrião. Tem DNS embutido para comunicarem por nome em vez de IP.
+
+Volume → É uma caixa de armazenamento ligada a um ou mais contentores, para poderem guardar e partilhar ficheiros, mesmo depois de o contentor parar, ser apagado, reiniciado ou reconstruído.
+
+TLS → É o protocolo que encripta o tráfego HTTP, transformando-o em HTTPS.
