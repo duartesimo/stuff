@@ -1,16 +1,53 @@
-Docker → Empacota o código, bibliotecas e dependências de uma aplicação numa imagem. Ao executar essa imagem, cria-se um contentor.
-
-Container → Vive no seu próprio espaço, com o seu próprio processo, rede e sistema de ficheiros, mas partilha o kernel com o sistema anfitrião.
+Docker → Empacota o código, bibliotecas e dependências de uma aplicação numa imagem. Ao executar essa imagem, cria-se um container. Serve para correr aplicações em containers isolados, de forma leve e reproduzível.
+Container → Vive no seu próprio espaço, com o seu próprio processo, network e filesystem, mas partilha o kernel com o sistema host.
 
 Docker Compose → Lê o ficheiro docker-compose.yml e, com um único comando, faz build das imagens e cria redes e volumes. Fica tudo configurado.
-
 Sem ele, tens de escrever manualmente docker run sempre que quiseres arrancar cada contentor;
-Com Docker Compose, declaras e geres todos os teus contentores, redes, volumes e definições em conjunto, como se fosse um script.
+Com Docker Compose, declaras e geres todos os teus contentores, redes, volumes e definições em conjunto, como se fosse um script. 
 
-Docker vs VM → Como partilha o kernel, arranca mais depressa (não precisa de um sistema operativo por cada instância), usa menos recursos e é melhor em termos de portabilidade, porque corre da mesma forma em qualquer máquina onde o Docker esteja instalado.
+Docker vs VM → Como partilha o kernel, arranca mais depressa (não precisa de um sistema operativo por cada instância), usa menos recursos e é melhor em termos de portabilidade. VM tem hardware virtual e OS, mais lenta.
 
-Docker Network → É uma LAN virtual para os contentores comunicarem entre si, isolados de outras redes ou do anfitrião. Tem DNS embutido para comunicarem por nome em vez de IP.
+A estrutura de diretórios é importante porque separa claramente cada serviço. Cada serviço tem o seu próprio Dockerfile, configurações e scripts, tornando o projeto mais fácil de manter, depurar e avaliar.
 
 Volume → É uma caixa de armazenamento ligada a um ou mais contentores, para poderem guardar e partilhar ficheiros, mesmo depois de o contentor parar, ser apagado, reiniciado ou reconstruído.
 
 TLS → É o protocolo que encripta o tráfego HTTP, transformando-o em HTTPS.
+
+---
+
+Docker Network → É uma LAN virtual para os contentores comunicarem entre si, isolados de outras redes ou do host. Tem DNS embutido para comunicarem por nome em vez de IP.
+
+Eu utilizo o Bash apenas para executar um script de entrypoint. Não utilizo o bash sozinho para manter o contentor ativo, nem executo serviços em segundo plano (como o nginx e o bash em simultâneo).
+
+Os meus scripts de entrypoint não iniciam serviços em segundo plano. Eles terminam com o comando exec, para que o serviço real substitua o script e se torne o PID 1. Garante que o serviço recebe corretamente os sinais de terminação (como o SIGTERM).
+exec nginx -g "daemon off;" exec "$@" --> CMD ["/usr/sbin/php-fpm8.2", "-F"]; exec mysqld_safe --datadir=/var/lib/mysql --init-file=/tmp/init.sql;
+
+---
+
+make
+docker compose
+build da image com o Dockerfile
+criação do container a partir da image
+arranque do container
+execução do ENTRYPOINT
+script como PID 1 inicial
+exec substitui o script pelo serviço real
+
+------------
+
+docker compose ps
+curl -kI https://MEUUSER.42.fr
+http://MEUUSER.42.fr:80 same as http://MEUUSER.42.fr
+
+openssl s_client -connect MEUUSER.42.fr:443 -tls1_3 < /dev/null
+curl -kI → o site responde por HTTPS
+openssl s_client → há handshake TLS e certificado
+
+curl -I http://MEUUSER.42.fr
+
+build: ./requirements/nginx
+
+docker compose -p inception ps
+-p define o nome do projeto do Docker Compose, para identificar os recursos desse stack.
+
+
